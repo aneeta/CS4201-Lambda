@@ -1,0 +1,20 @@
+TRUE  = lambda a. lambda b. a,
+FALSE = lambda a. lambda b. b
+
+AND   = lambda p. lambda q. p q FALSE,
+OR    = lambda p. lambda q. p TRUE q,
+NOT   = lambda p. lambda a. lambda b. p b a,
+IF    = lambda p. lambda a. lambda b. p a b,
+
+-- Construct lists
+CONS = lambda h. lambda t. lambda f. f h t,
+NIL = lambda f. true,
+
+-- Check if list is empty
+NULL = lambda L. L (lambda h. lambda t. false),
+
+-- Get the head (first element) and tail (all other elements) of a list
+HD = lambda L. L (lambda h. lambda t. h),
+TL = lambda L. L (lambda h. lambda t. t),
+
+L = CONS 1 (CONS 2 (CONS 3 NIL))
