@@ -57,15 +57,125 @@ public interface FunlListener extends ParseTreeListener {
 	 */
 	void exitArgs(FunlParser.ArgsContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link FunlParser#expr}.
+	 * Enter a parse tree produced by the {@code App}
+	 * labeled alternative in {@link FunlParser#expr}.
 	 * @param ctx the parse tree
 	 */
-	void enterExpr(FunlParser.ExprContext ctx);
+	void enterApp(FunlParser.AppContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link FunlParser#expr}.
+	 * Exit a parse tree produced by the {@code App}
+	 * labeled alternative in {@link FunlParser#expr}.
 	 * @param ctx the parse tree
 	 */
-	void exitExpr(FunlParser.ExprContext ctx);
+	void exitApp(FunlParser.AppContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code Nil}
+	 * labeled alternative in {@link FunlParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterNil(FunlParser.NilContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code Nil}
+	 * labeled alternative in {@link FunlParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitNil(FunlParser.NilContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code UnOp}
+	 * labeled alternative in {@link FunlParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterUnOp(FunlParser.UnOpContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code UnOp}
+	 * labeled alternative in {@link FunlParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitUnOp(FunlParser.UnOpContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code Cond}
+	 * labeled alternative in {@link FunlParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterCond(FunlParser.CondContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code Cond}
+	 * labeled alternative in {@link FunlParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitCond(FunlParser.CondContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code Brackets}
+	 * labeled alternative in {@link FunlParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterBrackets(FunlParser.BracketsContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code Brackets}
+	 * labeled alternative in {@link FunlParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitBrackets(FunlParser.BracketsContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code True}
+	 * labeled alternative in {@link FunlParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterTrue(FunlParser.TrueContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code True}
+	 * labeled alternative in {@link FunlParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitTrue(FunlParser.TrueContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code Id}
+	 * labeled alternative in {@link FunlParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterId(FunlParser.IdContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code Id}
+	 * labeled alternative in {@link FunlParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitId(FunlParser.IdContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code False}
+	 * labeled alternative in {@link FunlParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterFalse(FunlParser.FalseContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code False}
+	 * labeled alternative in {@link FunlParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitFalse(FunlParser.FalseContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code BinOp}
+	 * labeled alternative in {@link FunlParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterBinOp(FunlParser.BinOpContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code BinOp}
+	 * labeled alternative in {@link FunlParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitBinOp(FunlParser.BinOpContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code Int}
+	 * labeled alternative in {@link FunlParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterInt(FunlParser.IntContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code Int}
+	 * labeled alternative in {@link FunlParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitInt(FunlParser.IntContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link FunlParser#unop}.
 	 * @param ctx the parse tree

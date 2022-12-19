@@ -10,16 +10,16 @@ where : WHERE LBRACE decls+ RBRACE ;
 
 args : IDENT* ;
 
-expr : APPLY LPAREN expr COMMA expr RPAREN
-     | NIL
-     | IDENT
-     | NUMERAL 
-     | TRUE
-     | FALSE
-     | expr binop expr 
-     | unop expr 
-     | IF expr THEN expr ELSE expr 
-     | LPAREN expr RPAREN 
+expr : APPLY LPAREN expr COMMA expr RPAREN # App
+     | NIL # Nil
+     | IDENT # Id
+     | NUMERAL # Int 
+     | TRUE # True
+     | FALSE # False
+     | expr binop expr # BinOp
+     | unop expr # UnOp
+     | IF expr THEN expr ELSE expr # Cond
+     | LPAREN expr RPAREN # Brackets
      ;
 
 unop : NOT | MINUS | HEAD | TAIL | NULL;

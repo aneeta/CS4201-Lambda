@@ -10,12 +10,13 @@ public class Translate {
 
         String inputFile = null;
 
-        if (args.length > 0 )
+        if (args.length > 0)
             inputFile = args[0];
 
         InputStream is = System.in;
 
-        if (inputFile != null ) is = new FileInputStream(inputFile);
+        if (inputFile != null)
+            is = new FileInputStream(inputFile);
 
         ANTLRInputStream input = new ANTLRInputStream(is);
 
@@ -29,12 +30,12 @@ public class Translate {
 
         ParseTreeWalker walker = new ParseTreeWalker();
 
-        FListener translate = new FListener(parser);
+        // translate
+        LambdaTranslatorVisit translator = new LambdaTranslatorVisit();
+        translator.visit(tree);
 
-        walker.walk(translate, tree);
-
-
-
+        // evaluate
+        translator.evaluate();
     }
-    
+
 }

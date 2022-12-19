@@ -122,6 +122,11 @@ public class FunlParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof FunlListener ) ((FunlListener)listener).exitProgram(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FunlVisitor ) return ((FunlVisitor<? extends T>)visitor).visitProgram(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ProgramContext program() throws RecognitionException {
@@ -181,6 +186,11 @@ public class FunlParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof FunlListener ) ((FunlListener)listener).exitMain(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FunlVisitor ) return ((FunlVisitor<? extends T>)visitor).visitMain(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -245,6 +255,11 @@ public class FunlParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof FunlListener ) ((FunlListener)listener).exitDecls(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FunlVisitor ) return ((FunlVisitor<? extends T>)visitor).visitDecls(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final DeclsContext decls() throws RecognitionException {
@@ -308,6 +323,11 @@ public class FunlParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof FunlListener ) ((FunlListener)listener).exitWhere(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FunlVisitor ) return ((FunlVisitor<? extends T>)visitor).visitWhere(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final WhereContext where() throws RecognitionException {
@@ -368,6 +388,11 @@ public class FunlParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof FunlListener ) ((FunlListener)listener).exitArgs(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FunlVisitor ) return ((FunlVisitor<? extends T>)visitor).visitArgs(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ArgsContext args() throws RecognitionException {
@@ -406,6 +431,18 @@ public class FunlParser extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class ExprContext extends ParserRuleContext {
+		public ExprContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_expr; }
+	 
+		public ExprContext() { }
+		public void copyFrom(ExprContext ctx) {
+			super.copyFrom(ctx);
+		}
+	}
+	@SuppressWarnings("CheckReturnValue")
+	public static class AppContext extends ExprContext {
 		public TerminalNode APPLY() { return getToken(FunlParser.APPLY, 0); }
 		public TerminalNode LPAREN() { return getToken(FunlParser.LPAREN, 0); }
 		public List<ExprContext> expr() {
@@ -416,31 +453,206 @@ public class FunlParser extends Parser {
 		}
 		public TerminalNode COMMA() { return getToken(FunlParser.COMMA, 0); }
 		public TerminalNode RPAREN() { return getToken(FunlParser.RPAREN, 0); }
-		public TerminalNode NIL() { return getToken(FunlParser.NIL, 0); }
-		public TerminalNode IDENT() { return getToken(FunlParser.IDENT, 0); }
-		public TerminalNode NUMERAL() { return getToken(FunlParser.NUMERAL, 0); }
-		public TerminalNode TRUE() { return getToken(FunlParser.TRUE, 0); }
-		public TerminalNode FALSE() { return getToken(FunlParser.FALSE, 0); }
-		public UnopContext unop() {
-			return getRuleContext(UnopContext.class,0);
-		}
-		public TerminalNode IF() { return getToken(FunlParser.IF, 0); }
-		public TerminalNode THEN() { return getToken(FunlParser.THEN, 0); }
-		public TerminalNode ELSE() { return getToken(FunlParser.ELSE, 0); }
-		public BinopContext binop() {
-			return getRuleContext(BinopContext.class,0);
-		}
-		public ExprContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_expr; }
+		public AppContext(ExprContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof FunlListener ) ((FunlListener)listener).enterExpr(this);
+			if ( listener instanceof FunlListener ) ((FunlListener)listener).enterApp(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof FunlListener ) ((FunlListener)listener).exitExpr(this);
+			if ( listener instanceof FunlListener ) ((FunlListener)listener).exitApp(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FunlVisitor ) return ((FunlVisitor<? extends T>)visitor).visitApp(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	@SuppressWarnings("CheckReturnValue")
+	public static class NilContext extends ExprContext {
+		public TerminalNode NIL() { return getToken(FunlParser.NIL, 0); }
+		public NilContext(ExprContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof FunlListener ) ((FunlListener)listener).enterNil(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof FunlListener ) ((FunlListener)listener).exitNil(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FunlVisitor ) return ((FunlVisitor<? extends T>)visitor).visitNil(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	@SuppressWarnings("CheckReturnValue")
+	public static class UnOpContext extends ExprContext {
+		public UnopContext unop() {
+			return getRuleContext(UnopContext.class,0);
+		}
+		public ExprContext expr() {
+			return getRuleContext(ExprContext.class,0);
+		}
+		public UnOpContext(ExprContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof FunlListener ) ((FunlListener)listener).enterUnOp(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof FunlListener ) ((FunlListener)listener).exitUnOp(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FunlVisitor ) return ((FunlVisitor<? extends T>)visitor).visitUnOp(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	@SuppressWarnings("CheckReturnValue")
+	public static class CondContext extends ExprContext {
+		public TerminalNode IF() { return getToken(FunlParser.IF, 0); }
+		public List<ExprContext> expr() {
+			return getRuleContexts(ExprContext.class);
+		}
+		public ExprContext expr(int i) {
+			return getRuleContext(ExprContext.class,i);
+		}
+		public TerminalNode THEN() { return getToken(FunlParser.THEN, 0); }
+		public TerminalNode ELSE() { return getToken(FunlParser.ELSE, 0); }
+		public CondContext(ExprContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof FunlListener ) ((FunlListener)listener).enterCond(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof FunlListener ) ((FunlListener)listener).exitCond(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FunlVisitor ) return ((FunlVisitor<? extends T>)visitor).visitCond(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	@SuppressWarnings("CheckReturnValue")
+	public static class BracketsContext extends ExprContext {
+		public TerminalNode LPAREN() { return getToken(FunlParser.LPAREN, 0); }
+		public ExprContext expr() {
+			return getRuleContext(ExprContext.class,0);
+		}
+		public TerminalNode RPAREN() { return getToken(FunlParser.RPAREN, 0); }
+		public BracketsContext(ExprContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof FunlListener ) ((FunlListener)listener).enterBrackets(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof FunlListener ) ((FunlListener)listener).exitBrackets(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FunlVisitor ) return ((FunlVisitor<? extends T>)visitor).visitBrackets(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	@SuppressWarnings("CheckReturnValue")
+	public static class TrueContext extends ExprContext {
+		public TerminalNode TRUE() { return getToken(FunlParser.TRUE, 0); }
+		public TrueContext(ExprContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof FunlListener ) ((FunlListener)listener).enterTrue(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof FunlListener ) ((FunlListener)listener).exitTrue(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FunlVisitor ) return ((FunlVisitor<? extends T>)visitor).visitTrue(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	@SuppressWarnings("CheckReturnValue")
+	public static class IdContext extends ExprContext {
+		public TerminalNode IDENT() { return getToken(FunlParser.IDENT, 0); }
+		public IdContext(ExprContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof FunlListener ) ((FunlListener)listener).enterId(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof FunlListener ) ((FunlListener)listener).exitId(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FunlVisitor ) return ((FunlVisitor<? extends T>)visitor).visitId(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	@SuppressWarnings("CheckReturnValue")
+	public static class FalseContext extends ExprContext {
+		public TerminalNode FALSE() { return getToken(FunlParser.FALSE, 0); }
+		public FalseContext(ExprContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof FunlListener ) ((FunlListener)listener).enterFalse(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof FunlListener ) ((FunlListener)listener).exitFalse(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FunlVisitor ) return ((FunlVisitor<? extends T>)visitor).visitFalse(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	@SuppressWarnings("CheckReturnValue")
+	public static class BinOpContext extends ExprContext {
+		public List<ExprContext> expr() {
+			return getRuleContexts(ExprContext.class);
+		}
+		public ExprContext expr(int i) {
+			return getRuleContext(ExprContext.class,i);
+		}
+		public BinopContext binop() {
+			return getRuleContext(BinopContext.class,0);
+		}
+		public BinOpContext(ExprContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof FunlListener ) ((FunlListener)listener).enterBinOp(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof FunlListener ) ((FunlListener)listener).exitBinOp(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FunlVisitor ) return ((FunlVisitor<? extends T>)visitor).visitBinOp(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	@SuppressWarnings("CheckReturnValue")
+	public static class IntContext extends ExprContext {
+		public TerminalNode NUMERAL() { return getToken(FunlParser.NUMERAL, 0); }
+		public IntContext(ExprContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof FunlListener ) ((FunlListener)listener).enterInt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof FunlListener ) ((FunlListener)listener).exitInt(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FunlVisitor ) return ((FunlVisitor<? extends T>)visitor).visitInt(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -464,6 +676,10 @@ public class FunlParser extends Parser {
 			switch (_input.LA(1)) {
 			case APPLY:
 				{
+				_localctx = new AppContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
+
 				setState(52);
 				match(APPLY);
 				setState(53);
@@ -480,30 +696,45 @@ public class FunlParser extends Parser {
 				break;
 			case NIL:
 				{
+				_localctx = new NilContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
 				setState(59);
 				match(NIL);
 				}
 				break;
 			case IDENT:
 				{
+				_localctx = new IdContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
 				setState(60);
 				match(IDENT);
 				}
 				break;
 			case NUMERAL:
 				{
+				_localctx = new IntContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
 				setState(61);
 				match(NUMERAL);
 				}
 				break;
 			case TRUE:
 				{
+				_localctx = new TrueContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
 				setState(62);
 				match(TRUE);
 				}
 				break;
 			case FALSE:
 				{
+				_localctx = new FalseContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
 				setState(63);
 				match(FALSE);
 				}
@@ -514,6 +745,9 @@ public class FunlParser extends Parser {
 			case NOT:
 			case MINUS:
 				{
+				_localctx = new UnOpContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
 				setState(64);
 				unop();
 				setState(65);
@@ -522,6 +756,9 @@ public class FunlParser extends Parser {
 				break;
 			case IF:
 				{
+				_localctx = new CondContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
 				setState(67);
 				match(IF);
 				setState(68);
@@ -538,6 +775,9 @@ public class FunlParser extends Parser {
 				break;
 			case LPAREN:
 				{
+				_localctx = new BracketsContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
 				setState(74);
 				match(LPAREN);
 				setState(75);
@@ -559,7 +799,7 @@ public class FunlParser extends Parser {
 					_prevctx = _localctx;
 					{
 					{
-					_localctx = new ExprContext(_parentctx, _parentState);
+					_localctx = new BinOpContext(new ExprContext(_parentctx, _parentState));
 					pushNewRecursionContext(_localctx, _startState, RULE_expr);
 					setState(80);
 					if (!(precpred(_ctx, 4))) throw new FailedPredicateException(this, "precpred(_ctx, 4)");
@@ -605,6 +845,11 @@ public class FunlParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof FunlListener ) ((FunlListener)listener).exitUnop(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FunlVisitor ) return ((FunlVisitor<? extends T>)visitor).visitUnop(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -664,6 +909,11 @@ public class FunlParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof FunlListener ) ((FunlListener)listener).exitBinop(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FunlVisitor ) return ((FunlVisitor<? extends T>)visitor).visitBinop(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
