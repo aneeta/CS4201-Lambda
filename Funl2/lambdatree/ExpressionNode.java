@@ -2,24 +2,15 @@ package lambdatree;
 
 public class ExpressionNode {
 
-    // base node
-    // can contain abstractions, individual variables, ints, or operations on them
+    // base node:
+    // can contain abstractions, individual variables,
+    // ints, or operations on them
 
     ExpressionNode left;
     ExpressionNode right;
-    // TODO: remove parent
-    ExpressionNode parent;
 
     public ExpressionNode getLeft() {
         return this.left;
-    }
-
-    public ExpressionNode getParent() {
-        return this.parent;
-    }
-
-    public void setParent(ExpressionNode parent) {
-        this.parent = parent;
     }
 
     public void setLeft(ExpressionNode left) {

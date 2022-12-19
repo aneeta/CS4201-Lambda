@@ -30,11 +30,9 @@ public class BinOpNode extends ExpressionNode {
     public ExpressionNode reduce() {
         if (left.canReduce()) {
             left = left.reduce();
-
         } else if (right.canReduce()) {
             right = right.reduce();
         } else {
-
             if (left instanceof IntNode && right instanceof IntNode) {
                 IntNode leftInt = (IntNode) left;
                 IntNode rightInt = (IntNode) right;
@@ -44,9 +42,48 @@ public class BinOpNode extends ExpressionNode {
                     case "+":
                         result = leftInt.getValue() + rightInt.getValue();
                         break;
+                    case "-":
+                        result = leftInt.getValue() - rightInt.getValue();
+                        break;
+                    case "/":
+                        result = leftInt.getValue() / rightInt.getValue();
+                        break;
+                    case "*":
+                        result = leftInt.getValue() * rightInt.getValue();
+                        break;
+                    case "<>":
+                        if (leftInt.getValue() != rightInt.getValue()) {
+                            return LambdaTree.getTrueNode();
+                        } else {
+                            return LambdaTree.getFalseNode();
+                        }
+                    case ">":
+                        if (leftInt.getValue() > rightInt.getValue()) {
+                            return LambdaTree.getTrueNode();
+                        } else {
+                            return LambdaTree.getFalseNode();
+                        }
+                    case ">=":
+                        if (leftInt.getValue() >= rightInt.getValue()) {
+                            return LambdaTree.getTrueNode();
+                        } else {
+                            return LambdaTree.getFalseNode();
+                        }
+                    case "<":
+                        if (leftInt.getValue() < rightInt.getValue()) {
+                            return LambdaTree.getTrueNode();
+                        } else {
+                            return LambdaTree.getFalseNode();
+                        }
+                    case "<=":
+                        if (leftInt.getValue() <= rightInt.getValue()) {
+                            return LambdaTree.getTrueNode();
+                        } else {
+                            return LambdaTree.getFalseNode();
+                        }
                     default:
                         result = 0;
-
+                        break;
                 }
                 return new IntNode(result);
             }
