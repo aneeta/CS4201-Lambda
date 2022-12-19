@@ -81,6 +81,12 @@ public class BinOpNode extends ExpressionNode {
                         } else {
                             return LambdaTree.getFalseNode();
                         }
+                    case "==":
+                        if (leftInt.getValue() == rightInt.getValue()) {
+                            return LambdaTree.getTrueNode();
+                        } else {
+                            return LambdaTree.getFalseNode();
+                        }
                     default:
                         result = 0;
                         break;

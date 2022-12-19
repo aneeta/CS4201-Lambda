@@ -1,6 +1,6 @@
 package lambdatree;
 
-public class ExpressionNode {
+public abstract class ExpressionNode {
 
     // base node:
     // can contain abstractions, individual variables,
@@ -41,13 +41,6 @@ public class ExpressionNode {
         return this;
     }
 
-    public ExpressionNode deepcopy() {
-        ExpressionNode copy = new ExpressionNode();
-        copy.left = this.left.deepcopy();
-        copy.right = this.right.deepcopy();
-        return copy;
-    }
+    public abstract ExpressionNode deepcopy();
 
 }
-
-    

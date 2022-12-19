@@ -14,7 +14,6 @@ public class IntNode extends ExpressionNode {
     @Override
     public String toString() {
         return Integer.toString(value);
-
     }
 
     @Override

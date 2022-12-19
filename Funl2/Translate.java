@@ -33,11 +33,6 @@ public class Translate {
         // translate
         LambdaTranslatorVisit translator = new LambdaTranslatorVisit();
         translator.visit(tree);
-        translator.printTree();
-
-        // LambdaTranslator translate = new LambdaTranslator(parser);
-
-        // walker.walk(translate, tree);
 
         // evaluate
         System.out.print("\nEvaluating\n");

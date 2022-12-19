@@ -12,18 +12,22 @@ import lambdatree.BinOpNode;
 import lambdatree.ConditionalNode;
 import lambdatree.ExpressionNode;
 import lambdatree.LambdaTree;
+import lambdatree.UnOpNode;
 import lambdatree.VarNode;
 import lambdatree.IntNode;
 
 public class LambdaTranslatorVisit extends FunlBaseVisitor {
 
 	final List<String> arthmeticOperators = new ArrayList<>(
-			Arrays.asList("+", "-", "/", "*", "<>", "<", ">", ">=", "<="));
+			Arrays.asList("+", "-", "/", "*", "<>", "<", ">", ">=", "<=", "=="));
 	final List<String> logicOperators = new ArrayList<>(Arrays.asList("and", "or"));
 
 	LambdaTree lambdaTree;
 	LambdaTree currentSubTree;
 	Map<String, ExpressionNode> abstractionsMap;
+
+	String currentFunction;
+	boolean currentFunctionRecursive;
 
 	public LambdaTranslatorVisit() {
 		this.lambdaTree = new LambdaTree();
@@ -61,6 +65,9 @@ public class LambdaTranslatorVisit extends FunlBaseVisitor {
 
 	@Override
 	public Void visitMain(FunlParser.MainContext ctx) {
+		currentFunction = "main";
+		currentFunctionRecursive = false;
+
 		if (ctx.where() != null) {
 			visit(ctx.where());
 		}
@@ -73,6 +80,11 @@ public class LambdaTranslatorVisit extends FunlBaseVisitor {
 	@Override
 	public Void visitDecls(FunlParser.DeclsContext ctx) {
 		String id = ctx.IDENT().getText();
+		String prevCurrentFunction = currentFunction;
+		boolean prevCurrentFunctionRecursive = currentFunctionRecursive;
+		currentFunction = id;
+		currentFunctionRecursive = false;
+
 		if (abstractionsMap.containsKey(id)) {
 			// function already defined
 			// do nothing (overwrite, since main declarations are called after general
@@ -81,8 +93,28 @@ public class LambdaTranslatorVisit extends FunlBaseVisitor {
 		}
 		LambdaTree subTree = (LambdaTree) visit(ctx.args());
 		ExpressionNode expr = (ExpressionNode) visit(ctx.expr());
-		subTree.getCurrentNode().setRight(expr);
+		if (subTree.getRoot() == null) {
+			// no args
+			subTree.setRoot(expr);
+			subTree.setCurrentNode(expr);
+		} else {
+			subTree.getCurrentNode().setRight(expr);
+		}
+
+		if (currentFunctionRecursive) {
+			ExpressionNode yCombinatorApply = new ApplicationNode();
+			yCombinatorApply.setLeft(lambdaTree.getYCombinatorNode());
+			yCombinatorApply.setRight(new AbstractionNode());
+			yCombinatorApply.getRight().setLeft(new VarNode("_f"));
+			yCombinatorApply.getRight().setRight(subTree.getRoot());
+
+			subTree.setRoot(yCombinatorApply);
+		}
+
 		abstractionsMap.put(id, subTree.getRoot());
+
+		currentFunction = prevCurrentFunction;
+		currentFunctionRecursive = prevCurrentFunctionRecursive;
 		return null;
 	}
 
@@ -107,7 +139,6 @@ public class LambdaTranslatorVisit extends FunlBaseVisitor {
 			} else {
 				node = subTree.getCurrentNode();
 				AbstractionNode nextNode = new AbstractionNode();
-				// nextNode.setParent(node);
 				node.setRight(nextNode);
 				subTree.setCurrentNode(nextNode);
 				node = nextNode;
@@ -116,7 +147,6 @@ public class LambdaTranslatorVisit extends FunlBaseVisitor {
 			VarNode varNode = new VarNode(arg.getText());
 			node.setLeft(varNode);
 		}
-
 		return subTree;
 	}
 
@@ -144,12 +174,39 @@ public class LambdaTranslatorVisit extends FunlBaseVisitor {
 
 	@Override
 	public ExpressionNode visitUnOp(FunlParser.UnOpContext ctx) {
-		ApplicationNode node = new ApplicationNode();
-		ExpressionNode left = (ExpressionNode) visit(ctx.unop());
-		ExpressionNode right = (ExpressionNode) visit(ctx.expr());
-		node.setLeft(left);
-		node.setRight(right);
-		return node;
+		String op = ctx.unop().getChild(0).toString();
+		ExpressionNode node;
+		if (op.equals("not")) {
+			node = new ApplicationNode();
+			node.setLeft(LambdaTree.getNotNode());
+			node.setRight((ExpressionNode) visit(ctx.expr()));
+			return node;
+		}
+		if (op.equals("-")) {
+			node = new UnOpNode("-");
+			node.setRight((ExpressionNode) visit(ctx.expr()));
+			return node;
+		}
+		if (op.equals("hd")) {
+			node = null;
+			return node; // TODO
+		}
+		if (op.equals("tl")) {
+			node = null;
+			return node; // TODO
+		}
+		if (op.equals("null")) {
+			node = null;
+			return node; // TODO
+		} else {
+			node = null;
+			return node; // TODO
+		}
+		// ApplicationNode node = new ApplicationNode();
+		// ExpressionNode left = (ExpressionNode) visit(ctx.unop());
+		// ExpressionNode right = (ExpressionNode) visit(ctx.expr());
+		// node.setLeft(left);
+		// node.setRight(right);
 	}
 
 	@Override
@@ -181,18 +238,16 @@ public class LambdaTranslatorVisit extends FunlBaseVisitor {
 
 	@Override
 	public AbstractionNode visitTrue(FunlParser.TrueContext ctx) {
-		// TRUE = lambda a. lambda b. a,
-		AbstractionNode node = new AbstractionNode();
-		node.setLeft(new VarNode("a"));
-		node.setRight(new AbstractionNode());
-		node.getRight().setLeft(new VarNode("b"));
-		node.getRight().setRight(new VarNode("a"));
-		return node;
+		return LambdaTree.getTrueNode();
 	}
 
 	@Override
 	public ExpressionNode visitId(FunlParser.IdContext ctx) {
 		String valName = ctx.getText();
+		if (valName.equals(currentFunction)) {
+			currentFunctionRecursive = true;
+			return new VarNode("_f");
+		}
 		// if Identifier stands for a function, return the definition
 		if (abstractionsMap.containsKey(valName)) {
 			return abstractionsMap.get(valName);
@@ -248,27 +303,30 @@ public class LambdaTranslatorVisit extends FunlBaseVisitor {
 
 	@Override
 	public ExpressionNode visitUnop(FunlParser.UnopContext ctx) {
-		if (ctx.equals("not")) {
+		String op = ctx.getChild(0).toString();
+		if (op.equals("not")) {
 			return LambdaTree.getNotNode();
 		}
-		if (ctx.equals("minus")) {
-			return getNotNode(); // TODO
-
+		if (op.equals("-")) {
+			// AbstractionNode node = new AbstractionNode();
+			// BinOpNode binOpNode = new BinOpNode("-");
+			// node.setLeft(new VarNode("n"));
+			// node.setRight(binOpNode);
+			// binOpNode.setLeft(new IntNode(0));
+			// binOpNode.setRight(new VarNode("n"));
+			return node;
 		}
-		if (ctx.equals("head")) {
-			return getNotNode(); // TODO
-
+		if (op.equals("hd")) {
+			return null; // TODO
 		}
-		if (ctx.equals("tail")) {
-			return getNotNode(); // TODO
-
+		if (op.equals("tl")) {
+			return null; // TODO
 		}
-		if (ctx.equals("null")) {
-			return getNotNode(); // TODO
+		if (op.equals("null")) {
+			return null; // TODO
 		}
 		// something went wrong
 		return null;
-
 	}
 
 	@Override
