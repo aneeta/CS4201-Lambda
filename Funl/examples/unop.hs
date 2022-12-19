@@ -1,3 +1,3 @@
-main = if (false) then true else apply(times, 2)
+main = if (false) then true else apply(diff, 2)
 
-times f = f <> 3
+diff f = f <> 3

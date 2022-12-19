@@ -35,7 +35,6 @@ public class Translate {
         translator.visit(tree);
 
         // evaluate
-        System.out.print("\nEvaluating\n");
         translator.evaluate();
     }
 
