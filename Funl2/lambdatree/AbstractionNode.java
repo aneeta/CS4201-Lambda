@@ -2,16 +2,6 @@ package lambdatree;
 
 public class AbstractionNode extends ExpressionNode {
 
-    // public AbstractionNode() {
-    // this.left = null;
-    // this.right = null;
-    // }
-
-    // public AbstractionNode(VarNode left, ExpressionNode right) {
-    // this.left = left;
-    // this.right = right;
-    // }
-
     public ExpressionNode getLeft() {
         return this.left;
     }
@@ -66,6 +56,3 @@ public class AbstractionNode extends ExpressionNode {
 
 }
 
-    
-
-    

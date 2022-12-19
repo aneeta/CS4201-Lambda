@@ -49,96 +49,6 @@ public class LambdaTranslatorVisit extends FunlBaseVisitor {
 
 	}
 
-	public AbstractionNode getTrueNode() {
-		// TRUE = lambda a. lambda b. a
-		AbstractionNode node = new AbstractionNode();
-		node.setLeft(new VarNode("a"));
-		node.setRight(new AbstractionNode());
-		node.getRight().setLeft(new VarNode("b"));
-		node.getRight().setRight(new VarNode("a"));
-		return node;
-	}
-
-	public AbstractionNode getFalseNode() {
-		// FALSE = lambda a. lambda b. b
-		AbstractionNode node = new AbstractionNode();
-		node.setLeft(new VarNode("a"));
-		node.setRight(new AbstractionNode());
-		node.getRight().setLeft(new VarNode("b"));
-		node.getRight().setRight(new VarNode("b"));
-		return node;
-	}
-
-	public AbstractionNode getAndNode() {
-		// AND = lambda p. lambda q. p q FALSE
-		AbstractionNode node = new AbstractionNode();
-
-		// lambda p.
-		node.setLeft(new VarNode("p"));
-		node.setRight(new AbstractionNode());
-		// lambda q.
-		node.getRight().setLeft(new VarNode("q"));
-		node.getRight().setRight(new ApplicationNode());
-
-		node.getRight().getRight().setLeft(new ApplicationNode());
-		node.getRight().getRight().setRight(getFalseNode());
-
-		node.getRight().getRight().getLeft().setLeft(new VarNode("p"));
-		node.getRight().getRight().getLeft().setRight(new VarNode("q"));
-
-		// // p expr
-		// node.getRight().getRight().setLeft(new VarNode("p"));
-		// node.getRight().getRight().setRight(new ExpressionNode());
-		// // q FALSE
-		// node.getRight().getRight().getRight().setLeft(new VarNode("q"));
-		// node.getRight().getRight().getRight().setRight(getFalseNode());
-
-		return node;
-	}
-
-	public AbstractionNode getOrNode() {
-		// OR = lambda p. lambda q. p TRUE q
-		AbstractionNode node = new AbstractionNode();
-
-		// lambda p.
-		node.setLeft(new VarNode("p"));
-		node.setRight(new AbstractionNode());
-		// lambda q.
-		node.getRight().setLeft(new VarNode("q"));
-		node.getRight().setRight(new ExpressionNode());
-
-		// p expr
-		node.getRight().getRight().setLeft(new VarNode("p"));
-		node.getRight().getRight().setRight(new ExpressionNode());
-		// TRUE q
-		node.getRight().getRight().getRight().setLeft(getTrueNode());
-		node.getRight().getRight().getRight().setRight(new VarNode("q"));
-
-		return node;
-	}
-
-	public AbstractionNode getNotNode() {
-		// NOT = lambda p. lambda a. lambda b. p b a
-		AbstractionNode node = new AbstractionNode();
-		// lambda p.
-		node.setLeft(new VarNode("p"));
-		node.setRight(new AbstractionNode());
-		// lambda a.
-		node.getRight().setLeft(new VarNode("a"));
-		node.getRight().setRight(new AbstractionNode());
-		// lambda b.
-		node.getRight().getRight().setLeft(new VarNode("b"));
-		node.getRight().getRight().setRight(new ExpressionNode());
-		// p expr
-		node.getRight().getRight().getRight().setLeft(new VarNode("p"));
-		node.getRight().getRight().getRight().setRight(new ExpressionNode());
-		// b a
-		node.getRight().getRight().getRight().setLeft(new VarNode("b"));
-		node.getRight().getRight().getRight().setRight(new VarNode("a"));
-
-		return node;
-	}
-
 	@Override
 	public Void visitProgram(FunlParser.ProgramContext ctx) {
 		for (FunlParser.DeclsContext dCtx : ctx.decls()) {
@@ -197,7 +107,7 @@ public class LambdaTranslatorVisit extends FunlBaseVisitor {
 			} else {
 				node = subTree.getCurrentNode();
 				AbstractionNode nextNode = new AbstractionNode();
-				nextNode.setParent(node);
+				// nextNode.setParent(node);
 				node.setRight(nextNode);
 				subTree.setCurrentNode(nextNode);
 				node = nextNode;
@@ -228,7 +138,7 @@ public class LambdaTranslatorVisit extends FunlBaseVisitor {
 		// NIL = lambda f. true
 		AbstractionNode node = new AbstractionNode();
 		node.setLeft(new VarNode("f"));
-		node.setRight(getTrueNode());
+		node.setRight(LambdaTree.getTrueNode());
 		return node;
 	}
 
@@ -244,12 +154,23 @@ public class LambdaTranslatorVisit extends FunlBaseVisitor {
 
 	@Override
 	public ExpressionNode visitCond(FunlParser.CondContext ctx) {
-		// AbstractionNode node = new AbstractionNode();
+		// predicate
+		ExpressionNode predNode = (ExpressionNode) visit(ctx.expr(0));
+		// then
+		ExpressionNode thenNode = (ExpressionNode) visit(ctx.expr(1));
+		// else
+		ExpressionNode elseNode = (ExpressionNode) visit(ctx.expr(2));
 
-		ExpressionNode p = (ExpressionNode) visit(ctx.expr(0));
-		ConditionalNode node = new ConditionalNode(p);
-		node.setLeft((ExpressionNode) visit(ctx.expr(1)));
-		node.setRight((ExpressionNode) visit(ctx.expr(2)));
+		ApplicationNode node = new ApplicationNode();
+		node.setLeft(new ApplicationNode());
+		node.setRight(elseNode);
+
+		node.getLeft().setLeft(new ApplicationNode());
+		node.getLeft().setRight(thenNode);
+
+		node.getLeft().getLeft().setLeft(LambdaTree.getIfNode());
+		node.getLeft().getLeft().setRight(predNode);
+
 		return node;
 	}
 
@@ -283,7 +204,7 @@ public class LambdaTranslatorVisit extends FunlBaseVisitor {
 
 	@Override
 	public AbstractionNode visitFalse(FunlParser.FalseContext ctx) {
-		return getFalseNode();
+		return LambdaTree.getFalseNode();
 	}
 
 	@Override
@@ -306,7 +227,7 @@ public class LambdaTranslatorVisit extends FunlBaseVisitor {
 			node = new ApplicationNode();
 			// and/or
 			node.setLeft(new ApplicationNode());
-			node.getLeft().setLeft(getAndNode());
+			node.getLeft().setLeft(LambdaTree.getAndNode());
 			node.getLeft().setRight((ExpressionNode) visit(ctx.expr(0)));
 			node.setRight((ExpressionNode) visit(ctx.expr(1)));
 
@@ -328,9 +249,7 @@ public class LambdaTranslatorVisit extends FunlBaseVisitor {
 	@Override
 	public ExpressionNode visitUnop(FunlParser.UnopContext ctx) {
 		if (ctx.equals("not")) {
-			// NOT = lambda p. lambda a. lambda b. p b a
-			return getNotNode();
-
+			return LambdaTree.getNotNode();
 		}
 		if (ctx.equals("minus")) {
 			return getNotNode(); // TODO

@@ -12,6 +12,117 @@ public class LambdaTree {
         this.currentNode = null;
     }
 
+    public static AbstractionNode getTrueNode() {
+        // TRUE = lambda a. lambda b. a
+        AbstractionNode node = new AbstractionNode();
+        node.setLeft(new VarNode("a"));
+        node.setRight(new AbstractionNode());
+        node.getRight().setLeft(new VarNode("b"));
+        node.getRight().setRight(new VarNode("a"));
+        return node;
+    }
+
+    public static AbstractionNode getFalseNode() {
+        // FALSE = lambda a. lambda b. b
+        AbstractionNode node = new AbstractionNode();
+        node.setLeft(new VarNode("a"));
+        node.setRight(new AbstractionNode());
+        node.getRight().setLeft(new VarNode("b"));
+        node.getRight().setRight(new VarNode("b"));
+        return node;
+    }
+
+    public static AbstractionNode getAndNode() {
+        // AND = lambda p. lambda q. p q FALSE
+        AbstractionNode node = new AbstractionNode();
+
+        // lambda p.
+        node.setLeft(new VarNode("p"));
+        node.setRight(new AbstractionNode());
+        // lambda q.
+        node.getRight().setLeft(new VarNode("q"));
+        node.getRight().setRight(new ApplicationNode());
+        // expr FALSE
+        node.getRight().getRight().setLeft(new ApplicationNode());
+        node.getRight().getRight().setRight(getFalseNode());
+        // p q
+        node.getRight().getRight().getLeft().setLeft(new VarNode("p"));
+        node.getRight().getRight().getLeft().setRight(new VarNode("q"));
+
+        // // p expr
+        // node.getRight().getRight().setLeft(new VarNode("p"));
+        // node.getRight().getRight().setRight(new ExpressionNode());
+        // // q FALSE
+        // node.getRight().getRight().getRight().setLeft(new VarNode("q"));
+        // node.getRight().getRight().getRight().setRight(getFalseNode());
+
+        return node;
+    }
+
+    public static AbstractionNode getOrNode() {
+        // OR = lambda p. lambda q. p TRUE q
+        AbstractionNode node = new AbstractionNode();
+
+        // lambda p.
+        node.setLeft(new VarNode("p"));
+        node.setRight(new AbstractionNode());
+        // lambda q.
+        node.getRight().setLeft(new VarNode("q"));
+        node.getRight().setRight(new ApplicationNode());
+        // expr q
+        node.getRight().getRight().setLeft(new ApplicationNode());
+        node.getRight().getRight().setRight(new VarNode("q"));
+        // p TRUE
+        node.getRight().getRight().getLeft().setLeft(new VarNode("p"));
+        node.getRight().getRight().getLeft().setRight(getTrueNode());
+
+        return node;
+    }
+
+    public static AbstractionNode getNotNode() {
+        // NOT = lambda p. lambda a. lambda b. p b a
+        AbstractionNode node = new AbstractionNode();
+        // lambda p.
+        node.setLeft(new VarNode("p"));
+        node.setRight(new AbstractionNode());
+        // lambda a.
+        node.getRight().setLeft(new VarNode("a"));
+        node.getRight().setRight(new AbstractionNode());
+        // lambda b.
+        node.getRight().getRight().setLeft(new VarNode("b"));
+        node.getRight().getRight().setRight(new ApplicationNode());
+        // p expr
+        node.getRight().getRight().getRight().setLeft(new ApplicationNode());
+        node.getRight().getRight().getRight().setRight(new VarNode("p"));
+        // b a
+        node.getRight().getRight().getLeft().setLeft(new VarNode("b"));
+        node.getRight().getRight().getLeft().setRight(new VarNode("a"));
+
+        return node;
+    }
+
+    public static AbstractionNode getIfNode() {
+        // IF = lambda p. lambda a. lambda b. p a b
+        AbstractionNode node = new AbstractionNode();
+        // lambda p.
+        node.setLeft(new VarNode("p"));
+        node.setRight(new AbstractionNode());
+        // lambda a.
+        node.getRight().setLeft(new VarNode("a"));
+        node.getRight().setRight(new AbstractionNode());
+        // lambda b.
+        node.getRight().getRight().setLeft(new VarNode("b"));
+        node.getRight().getRight().setRight(new ApplicationNode());
+        // expr b
+        node.getRight().getRight().getRight().setLeft(new ApplicationNode());
+        node.getRight().getRight().getRight().setRight(new VarNode("b"));
+        // p a
+        node.getRight().getRight().getRight().getLeft().setLeft(new VarNode("p"));
+        node.getRight().getRight().getRight().getLeft().setRight(new VarNode("a"));
+
+        return node;
+    }
+
     public void defineFunction(String funcName, AbstractionNode rootNode) {
 
     }
@@ -53,31 +164,32 @@ public class LambdaTree {
         return;
     }
 
-    public void subVars(VarNode var, ExpressionNode sub, ExpressionNode currentNode) {
-        if (currentNode.getLeft().getLeft() != null) {
+    // public void subVars(VarNode var, ExpressionNode sub, ExpressionNode
+    // currentNode) {
+    // if (currentNode.getLeft().getLeft() != null) {
 
-            if (currentNode.getLeft() instanceof VarNode) {
-                VarNode v = (VarNode) currentNode.getLeft();
-                if (v.getVar().equals(var.getVar())) {
-                    currentNode.setLeft(sub);
-                }
-            } else {
-                subVars(var, sub, currentNode.getLeft());
-            }
-        }
-        if (currentNode.getRight().getRight() != null) {
-            if (currentNode.getRight() instanceof VarNode) {
-                VarNode v = (VarNode) currentNode.getRight();
-                if (v.getVar().equals(var.getVar())) {
-                    currentNode.setRight(sub);
-                }
-            } else {
-                subVars(var, sub, currentNode.getRight());
-            }
-        }
-        return;
+    // if (currentNode.getLeft() instanceof VarNode) {
+    // VarNode v = (VarNode) currentNode.getLeft();
+    // if (v.getVar().equals(var.getVar())) {
+    // currentNode.setLeft(sub);
+    // }
+    // } else {
+    // subVars(var, sub, currentNode.getLeft());
+    // }
+    // }
+    // if (currentNode.getRight().getRight() != null) {
+    // if (currentNode.getRight() instanceof VarNode) {
+    // VarNode v = (VarNode) currentNode.getRight();
+    // if (v.getVar().equals(var.getVar())) {
+    // currentNode.setRight(sub);
+    // }
+    // } else {
+    // subVars(var, sub, currentNode.getRight());
+    // }
+    // }
+    // return;
 
-    }
+    // }
 
     public ExpressionNode getRoot() {
         return this.root;

@@ -28,21 +28,6 @@ public class ApplicationNode extends ExpressionNode {
         }
         return this;
 
-        // ExpressionNode before = this;
-        // ExpressionNode current = left;
-        // while (current instanceof ApplicationNode) {
-        // before = current;
-        // current = current.left;
-        // }
-        // AbstractionNode abs = (AbstractionNode) current;
-        // VarNode var = (VarNode) abs.getLeft();
-
-        // ExpressionNode replaced = abs.getRight().replace(var.getVar(), this.right);
-        // if (before == this) {
-        // return replaced;
-        // }
-        // before.setLeft(replaced);
-        // return before;
     }
 
     @Override
