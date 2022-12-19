@@ -31,12 +31,17 @@ public class Translate {
         ParseTreeWalker walker = new ParseTreeWalker();
 
         // translate
-        LambdaTranslator translate = new LambdaTranslator(parser);
+        LambdaTranslatorVisit translator = new LambdaTranslatorVisit();
+        translator.visit(tree);
+        translator.printTree();
 
-        walker.walk(translate, tree);
+        // LambdaTranslator translate = new LambdaTranslator(parser);
+
+        // walker.walk(translate, tree);
 
         // evaluate
-
+        System.out.print("\nEvaluating\n");
+        translator.evaluate();
     }
 
 }

@@ -7,9 +7,14 @@ public class IntNode extends ExpressionNode {
         this.value = value;
     }
 
+    public int getValue() {
+        return this.value;
+    }
+
     @Override
     public String toString() {
         return Integer.toString(value);
+
     }
 
     @Override
@@ -18,5 +23,15 @@ public class IntNode extends ExpressionNode {
 
     @Override
     public void setRight(ExpressionNode node) {
+    }
+
+    @Override
+    public ExpressionNode replace(String var, ExpressionNode replacement) {
+        return this;
+    }
+
+    @Override
+    public ExpressionNode deepcopy() {
+        return new IntNode(this.value);
     }
 }

@@ -7,6 +7,7 @@ public class ExpressionNode {
 
     ExpressionNode left;
     ExpressionNode right;
+    // TODO: remove parent
     ExpressionNode parent;
 
     public ExpressionNode getLeft() {
@@ -36,4 +37,26 @@ public class ExpressionNode {
     public String toString() {
         return left.toString() + " " + right.toString();
     }
+
+    public ExpressionNode reduce() {
+        return this;
+    }
+
+    public boolean canReduce() {
+        return false;
+    }
+
+    public ExpressionNode replace(String var, ExpressionNode replacement) {
+        return this;
+    }
+
+    public ExpressionNode deepcopy() {
+        ExpressionNode copy = new ExpressionNode();
+        copy.left = this.left.deepcopy();
+        copy.right = this.right.deepcopy();
+        return copy;
+    }
+
 }
+
+    
