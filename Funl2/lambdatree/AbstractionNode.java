@@ -33,4 +33,39 @@ public class AbstractionNode extends ExpressionNode {
         return "λ" + left.toString() + ". " + right.toString();
     }
 
+    @Override
+    public boolean canReduce() {
+        return right.canReduce();
+    }
+
+    public ExpressionNode reduce(ExpressionNode sub) {
+        if (right.canReduce()) {
+            right = right.reduce();
+        }
+        return this;
+    }
+
+    @Override
+    public ExpressionNode replace(String var, ExpressionNode replacement) {
+        VarNode leftVar = (VarNode) left;
+        if (var.equals(leftVar.getVar())) {
+            // do not replace when different var scope
+            return this;
+        }
+        right = right.replace(var, replacement);
+        return this;
+    }
+
+    @Override
+    public ExpressionNode deepcopy() {
+        AbstractionNode copy = new AbstractionNode();
+        copy.left = this.left.deepcopy();
+        copy.right = this.right.deepcopy();
+        return copy;
+    }
+
 }
+
+    
+
+    

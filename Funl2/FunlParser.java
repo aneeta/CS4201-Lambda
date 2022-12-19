@@ -122,6 +122,11 @@ public class FunlParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof FunlListener ) ((FunlListener)listener).exitProgram(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FunlVisitor ) return ((FunlVisitor<? extends T>)visitor).visitProgram(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ProgramContext program() throws RecognitionException {
@@ -181,6 +186,11 @@ public class FunlParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof FunlListener ) ((FunlListener)listener).exitMain(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FunlVisitor ) return ((FunlVisitor<? extends T>)visitor).visitMain(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -245,6 +255,11 @@ public class FunlParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof FunlListener ) ((FunlListener)listener).exitDecls(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FunlVisitor ) return ((FunlVisitor<? extends T>)visitor).visitDecls(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final DeclsContext decls() throws RecognitionException {
@@ -308,6 +323,11 @@ public class FunlParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof FunlListener ) ((FunlListener)listener).exitWhere(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FunlVisitor ) return ((FunlVisitor<? extends T>)visitor).visitWhere(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final WhereContext where() throws RecognitionException {
@@ -367,6 +387,11 @@ public class FunlParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof FunlListener ) ((FunlListener)listener).exitArgs(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FunlVisitor ) return ((FunlVisitor<? extends T>)visitor).visitArgs(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -437,6 +462,11 @@ public class FunlParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof FunlListener ) ((FunlListener)listener).exitApp(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FunlVisitor ) return ((FunlVisitor<? extends T>)visitor).visitApp(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class NilContext extends ExprContext {
@@ -449,6 +479,11 @@ public class FunlParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof FunlListener ) ((FunlListener)listener).exitNil(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FunlVisitor ) return ((FunlVisitor<? extends T>)visitor).visitNil(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	@SuppressWarnings("CheckReturnValue")
@@ -467,6 +502,11 @@ public class FunlParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof FunlListener ) ((FunlListener)listener).exitUnOp(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FunlVisitor ) return ((FunlVisitor<? extends T>)visitor).visitUnOp(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	@SuppressWarnings("CheckReturnValue")
@@ -489,6 +529,11 @@ public class FunlParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof FunlListener ) ((FunlListener)listener).exitCond(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FunlVisitor ) return ((FunlVisitor<? extends T>)visitor).visitCond(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class BracketsContext extends ExprContext {
@@ -506,6 +551,11 @@ public class FunlParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof FunlListener ) ((FunlListener)listener).exitBrackets(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FunlVisitor ) return ((FunlVisitor<? extends T>)visitor).visitBrackets(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class TrueContext extends ExprContext {
@@ -518,6 +568,11 @@ public class FunlParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof FunlListener ) ((FunlListener)listener).exitTrue(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FunlVisitor ) return ((FunlVisitor<? extends T>)visitor).visitTrue(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	@SuppressWarnings("CheckReturnValue")
@@ -532,6 +587,11 @@ public class FunlParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof FunlListener ) ((FunlListener)listener).exitId(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FunlVisitor ) return ((FunlVisitor<? extends T>)visitor).visitId(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class FalseContext extends ExprContext {
@@ -544,6 +604,11 @@ public class FunlParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof FunlListener ) ((FunlListener)listener).exitFalse(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FunlVisitor ) return ((FunlVisitor<? extends T>)visitor).visitFalse(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	@SuppressWarnings("CheckReturnValue")
@@ -566,6 +631,11 @@ public class FunlParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof FunlListener ) ((FunlListener)listener).exitBinOp(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FunlVisitor ) return ((FunlVisitor<? extends T>)visitor).visitBinOp(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class IntContext extends ExprContext {
@@ -578,6 +648,11 @@ public class FunlParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof FunlListener ) ((FunlListener)listener).exitInt(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FunlVisitor ) return ((FunlVisitor<? extends T>)visitor).visitInt(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -771,6 +846,11 @@ public class FunlParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof FunlListener ) ((FunlListener)listener).exitUnop(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FunlVisitor ) return ((FunlVisitor<? extends T>)visitor).visitUnop(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final UnopContext unop() throws RecognitionException {
@@ -829,6 +909,11 @@ public class FunlParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof FunlListener ) ((FunlListener)listener).exitBinop(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FunlVisitor ) return ((FunlVisitor<? extends T>)visitor).visitBinop(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 

@@ -12,11 +12,28 @@ public class VarNode extends ExpressionNode {
         return individualVar;
     }
 
+    public String getVar() {
+        return individualVar;
+    }
+
     @Override
     public void setLeft(ExpressionNode node) {
     }
 
-@Override
+    @Override
     public void setRight(ExpressionNode node) {
+    }
+
+    @Override
+    public ExpressionNode replace(String var, ExpressionNode replacement) {
+        if (!var.equals(this.individualVar)) {
+            return this;
+        }
+        return replacement.deepcopy();
+    }
+
+    @Override
+    public ExpressionNode deepcopy() {
+        return new VarNode(this.individualVar);
     }
 }
